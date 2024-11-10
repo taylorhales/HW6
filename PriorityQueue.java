@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Taylor Hales / COMP 400C-001
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -150,9 +150,11 @@ class PriorityQueue<E, P> {
      */
 
     public Node add(E e, P priority) {
-
-        // YOUR CODE GOES HERE
-        return null;
+        // create new node w/ e element & its priority
+        Node newNode = new Node(e, priority, tree.size());
+        tree.add(newNode); // add new node to the end of the tree, the rightmost leaf
+        pullUp(newNode.idx); // re-heapify to keep the min-heap structure
+        return newNode; // return handle to newly added node
     }
 
 
@@ -167,9 +169,14 @@ class PriorityQueue<E, P> {
      */
 
     public boolean contains(E e) {
-
-        // ADD YOUR CODE HERE
-        return false;
+        // iterate through every node in the tree
+        for (Node node : tree){
+            // check if current node value matches the element e
+            if (node.value().equals(e)){
+                return true;  // if match is found, return true
+            }
+        }
+        return false; // if e is not found in priority queue, return false
     }
 
 

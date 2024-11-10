@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Taylor Hales / COMP 400C-001
  *
  *   This java file contains the problem solutions for the methods lastBoulder,
  *   showDuplicates, and pair methods. You should utilize the Java Collection
@@ -64,11 +64,30 @@ public class ProblemSolutions {
      */
 
   public static int lastBoulder(int[] boulders) {
+      // create a max heap to store the boulder by weight
+      // making sure the heaviest one is always on top
+      PriorityQueue<Integer> boulderHeap = new PriorityQueue<>(Collections.reverseOrder());
 
-      //
-      // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME / SECTION # ABOVE
-      //
-      return -1;
+      // add all boulders to max heap
+      for (int boulder : boulders){
+          boulderHeap.add(boulder);  // insert each boulder into the priority queue
+      }
+
+      // process each boulder until only 1 or 0 are in the queue
+      while (boulderHeap.size() > 1){
+          int first = boulderHeap.poll(); // remove the heaviest boulder from the queue
+          int second = boulderHeap.poll(); // remove the second heaviest from the queue
+
+          // if 2 boulders have different weights
+          // smash them & add difference back into the queue
+          if (first != second){
+              boulderHeap.add(first - second);
+          }
+          // if 2 boulders have the same weight, they are both destroyed
+      }
+      // if there is 1 boulder left in the queue, return its weight
+      // if the queue is empty, return 0 (aka all boulders were destroyed
+      return boulderHeap.isEmpty() ? 0 : boulderHeap.poll();
   }
 
 
@@ -90,11 +109,29 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> showDuplicates(ArrayList<String> input) {
+        // create HashMap to store strings & the num of times it appears in input list
+        HashMap<String, Integer> stringCounts = new HashMap<>();
 
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure result is sorted in ascending order
+       // iterate through each string in the input list
+        for (String str : input){
+            // update count in stringCounts for each string
+            stringCounts.put(str, stringCounts.getOrDefault(str, 0) + 1);
+        }
+
+        // create new ArrayList to hold unique strings that appear more than once
+        ArrayList<String> duplicates = new ArrayList<>();
+
+        // loop through every entry in stringCounts
+        for (Map.Entry<String, Integer> entry : stringCounts.entrySet()){
+            if (entry.getValue() > 1){
+                duplicates.add(entry.getKey()); // if the string appears more than once, add it to duplicates
+            }
+        }
+
+        // sort duplicates list in ascending order
+        Collections.sort(duplicates);
+
+        return duplicates;  // return list of sorted duplicates
 
     }
 
@@ -130,10 +167,39 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> pair(int[] input, int k) {
+        // create a HashSet to track nums that have already been processed
+        HashSet<Integer> seen = new HashSet<>();
+        // create a set to track unique pairs to prevent duplicates
+        HashSet<String> uniquePairs = new HashSet<>();
+        // create a list to store the final result pairs
+        ArrayList<String> result = new ArrayList<>();
 
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure returned lists is sorted as indicated above
+        // iterate over every num in the input array
+        for (int num : input) {
+            int target = k - num;  // calculate target value to reach sum k w/ current num
+
+            // check if target has already been seen
+            if (seen.contains(target)) {
+                // determine smaller & larger nums for correct ordering in pair
+                int a = Math.min(num, target);
+                int b = Math.max(num, target);
+
+                // create the formated pair string
+                String pairString = "(" + a + ", " + b + ")";
+
+                // add pair to result only if it hasn't been added yet
+                if (!uniquePairs.contains(pairString)) {
+                    uniquePairs.add(pairString); // mark pair as added
+                    result.add(pairString);  // add pair to the result list
+                }
+            }
+            // add current num to set of seen elements
+            seen.add(num);
+        }
+
+        // sort the pairs low to high
+        Collections.sort(result);
+
+        return result; // return sorted list
     }
 }
